@@ -75,8 +75,10 @@ namespace BTrackerR.Controllers
         [AllowAnonymous]
         [Route("/api/[controller]/GetUserId/{userEmail}")]
         public async Task<LoginViewModel> GetUserId(string userEmail){
-            var result =  await DbContext.Users.Where(p=>p.Email == userEmail).Select(p=>p.Id).FirstOrDefaultAsync();
-              return new LoginViewModel(){ UserId = result};
+            var result =  await DbContext.Users.Where(p=>p.Email == userEmail).Select(p=>p).FirstOrDefaultAsync();
+              return new LoginViewModel(){ 
+                  Email = result.Email, 
+                  UserId = result.Id};
         }
 
         #endregion

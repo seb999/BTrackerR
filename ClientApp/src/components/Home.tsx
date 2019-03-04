@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {connect} from 'react-redux'
+// import {connect} from 'react-redux'
 
 class Home extends React.Component {
   render(){
@@ -13,10 +13,12 @@ class Home extends React.Component {
     )};
 }
 
-  const mapStateToProps = (state:any) =>{
-    return {
-      userId: state.userId
-    }
-  }
+  // const mapStateToProps = (state:any) =>{
+  //   return {
+  //     userId: state.userId
+  //   }
+  // }
   
-  export default connect(mapStateToProps)(Home);
+  // export default connect(mapStateToProps)(Home);
+
+  export default (Home);

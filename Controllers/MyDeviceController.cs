@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BTrackerR.EF;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Antea25.Controllers
 {
@@ -28,6 +29,7 @@ namespace Antea25.Controllers
 
         ///Return list of device for current userId
         [HttpGet]
+        [Authorize]
         [Route("/api/[controller]/GetDeviceList")]
         public List<Device> GetDeviceList()
         {
