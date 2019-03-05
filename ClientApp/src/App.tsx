@@ -7,8 +7,9 @@ import Footer from './components/Footer';
 import Login from './components/Login'
 import Tracker from './components/Tracker'
 import axios from 'axios'
-// import {connect} from 'react-redux'
-// import { Dispatch } from 'redux'
+
+import {connect} from 'react-redux'
+import { Dispatch } from 'redux'
 
 interface State {
   isLogged? : boolean;
@@ -16,7 +17,7 @@ interface State {
 }
 
 interface Props {
-  //addUserId (event: any): void;
+  addUserId (event: any): void;
 }
 
 class App extends React.Component<Props, State>{
@@ -50,8 +51,8 @@ class App extends React.Component<Props, State>{
               userEmal : res.data.email,
             }
           })
-          
-          //this.props.addUserId(res.data.userId);
+          //mapDispatchToProps.addUserId(this.state.user.userId);
+          this.props.addUserId(res.data.userId);
         })
       }
       else{
@@ -67,6 +68,7 @@ class App extends React.Component<Props, State>{
   }
 
   public render() {
+    console.log(this.props);
     return (
       <BrowserRouter>
       <div >
@@ -86,11 +88,12 @@ class App extends React.Component<Props, State>{
   }
 }
 
-// const mapDispatchToProps = (dispatch:Dispatch) => {
-//   return {
-//     addUserId: (userId:string) => {dispatch({type: 'ADD_USER_ID', userId : userId})}
-//   }
-// }
+const mapDispatchToProps = (dispatch:Dispatch) => {
+  return {
+    //we want to call this function that will store userId in the store
+    addUserId: (userId:string) => {dispatch({type: 'ADD_USER_ID', userId : userId})}
+  }
+}
 
-// export default connect(mapDispatchToProps)(App);
-export default (App);
+export default connect(null ,mapDispatchToProps)(App);
+//export default (App);

@@ -20,10 +20,6 @@ class Login extends React.Component<Props, State>{
              rememberMe:false};
       }
 
-    componentWillMount(){
-        console.log(this.props.isLogged);
-    }
-
     handleChange = (e:any) => {
         this.setState({
             [e.target.id] : e.target.value
