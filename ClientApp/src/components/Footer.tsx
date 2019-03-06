@@ -4,7 +4,7 @@ class Footer extends React.Component{
     
     render(){
         return(
-            <footer className="py-5 bg-dark">123</footer>
+            <footer className="bg-dark page-footer footer">123</footer>
         )
     }
    

@@ -13,11 +13,14 @@ interface State {
 
 class Login extends React.Component<Props, State>{
     constructor(props: any) {
+       
         super(props)
         this.state = {
              userLogin : "", 
              userPassword: "",
              rememberMe:false};
+
+             console.log("Login page constructor")
       }
 
     handleChange = (e:any) => {

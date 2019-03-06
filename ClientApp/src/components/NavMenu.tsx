@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { NavLink } from 'react-router-dom'
-// import logo from '../images/Logo.png'
+import { NavLink, Redirect } from 'react-router-dom'
+import logo from '../images/Logo.png'
 import './NavMenu.css';
 import {Page} from '../class/Enums'
 
@@ -10,18 +10,33 @@ interface Props {
 }
 
 interface State {
+    login : boolean,
+    logout : boolean
 }
 
 class NavMenu extends React.Component<Props, State> {
     constructor(props: any){
         super(props);
+
+        this.state = {
+            login : false,
+            logout : false,
+            
+        }
     }
 
    login = ()=> {
-       this.props.redirectTo(Page.Login);
+       this.setState({
+           login : true,
+           logout : false
+       })
    }
 
    logout = () =>{
+        this.setState({
+            login : false,
+            logout : true
+        })
        this.props.redirectTo(Page.Logout);
    }
 
@@ -30,7 +45,7 @@ class NavMenu extends React.Component<Props, State> {
 
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <a className="navbar-brand" href="/">
-                {/* <img src={logo} className="logo" /> */}
+                <img src={logo} className="logo" />
                 </a>
             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
@@ -61,6 +76,9 @@ class NavMenu extends React.Component<Props, State> {
                     </li>
                     
                 </ul>
+                {this.state.login && <Redirect to="/Login" />}
+                {this.state.logout && <Redirect to="/" />}
+
                 {!this.props.user.userEmal &&
                     <div className="my-0 my-lg-0 md-3">
                     <button className="btn btn-outline-success my-2 my-sm-0" onClick={this.login}>Login</button>

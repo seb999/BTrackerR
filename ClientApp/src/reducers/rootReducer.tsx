@@ -8,12 +8,14 @@ const initState = {
     ]
 }
 const rootReducer = (state=initState, action:any) =>{
-    if (action.type ==='ADD_USER_ID') {
+    console.log(action.userId);
+    if (action.type ==='SET_USER_ID') {
         return {
             ...state,
             userId : action.userId
         }
     }
+    
     return state;
 }
 

@@ -69,6 +69,7 @@ class App extends React.Component<Props, State>{
   }
 
   logoutUser = () =>{
+    this.props.addUserId("");
     let url = "/api/Account/Logout/";
     axios.get(url).then(res =>{
         console.log("logout done!")
@@ -81,6 +82,7 @@ class App extends React.Component<Props, State>{
         userEmal : ""
       }
     })
+    
   }
 
   redirectTo = (p : Page)=>{
@@ -104,18 +106,18 @@ class App extends React.Component<Props, State>{
   public render() {
     return (
       <BrowserRouter>
-      <div>
+      <div className="wrap">
+      {this.state.redirectTo != undefined && <Redirect to={this.state.redirectTo} />}
         <NavMenu user={this.state.user} redirectTo={this.redirectTo} />
         <div className="container">
           <Switch>
             <Route exact path='/' component={Home} />
-            <Route exact path='/Home' component={Home} />
-            <Route exact path='/login' render={props => <Login {...props} logUser={this.logUser} isLogged={this.state.isLogged} />} />
-            <Route exact path='/tracker' component={Tracker} render={props => <Tracker {...props} redirectTo={this.redirectTo} />} />
-            {this.state.redirectTo != undefined && <Redirect to={this.state.redirectTo} />}
+            <Route exact path='/Login' render={props => <Login {...props} logUser={this.logUser} isLogged={this.state.isLogged} />} />
+            <Route exact path='/Tracker' render={props => <Tracker {...props} redirectTo={this.redirectTo} />} />
+            
           </Switch>
         </div>
-        <div id="push"></div>
+        <div id="push" className="push"></div>
         <Footer />
       </div>
       </BrowserRouter>
@@ -127,9 +129,8 @@ class App extends React.Component<Props, State>{
 const mapDispatchToProps = (dispatch:Dispatch) => {
   return {
     //we add this function to our props
-    addUserId: (userId:string) => {dispatch({type: 'ADD_USER_ID', userId : userId})}
+    addUserId: (userId:string) => {dispatch({type: 'SET_USER_ID', userId : userId})}
   }
 }
 
 export default connect(null ,mapDispatchToProps)(App);
-//export default (App);

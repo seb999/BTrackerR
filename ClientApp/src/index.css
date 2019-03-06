@@ -2,18 +2,23 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
+  height: 100%;
 }
 
-#wrap {
+html {
+  height: 100%;
+}
+
+.wrap {
   min-height: 100%;
   height: auto !important;
   height: 100%;
   /* Negative indent footer by it's height */
-  margin: 0 auto -90px;
+  margin: 0 auto -200px;
 }
 
 /* Set the fixed height of the footer here */
-#push,
-#footer {
-  height: 90px;
+.push,
+.footer {
+  height: 200px;
 }
