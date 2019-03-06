@@ -19,7 +19,7 @@ using Microsoft.Extensions.Options;
 namespace BTrackerR.Controllers
 {
     [Authorize]
-    [Route("[controller]/[action]")]
+    [Route("/api/[controller]/[action]")]
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -46,6 +46,15 @@ namespace BTrackerR.Controllers
         public string ErrorMessage { get; set; }
 
         #region Login from Client (Seb)
+
+        [HttpGet]
+        [Route("/api/[controller]/Logout")]
+        public async Task<string> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            _logger.LogInformation("User logged out.");
+            return "";
+        }
 
         [HttpPost]
         [AllowAnonymous]
@@ -282,16 +291,6 @@ namespace BTrackerR.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Logout()
-        {
-            await _signInManager.SignOutAsync();
-            _logger.LogInformation("User logged out.");
-            return null;
-            //return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
         [HttpPost]

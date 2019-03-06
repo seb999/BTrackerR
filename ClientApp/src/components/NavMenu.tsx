@@ -2,19 +2,29 @@ import * as React from 'react';
 import { NavLink } from 'react-router-dom'
 // import logo from '../images/Logo.png'
 import './NavMenu.css';
+import {Page} from '../class/Enums'
 
 interface Props {
     user  : User;
+    redirectTo(p : any): void;
 }
 
 interface State {
-
 }
 
 class NavMenu extends React.Component<Props, State> {
     constructor(props: any){
         super(props);
-      }
+    }
+
+   login = ()=> {
+       this.props.redirectTo(Page.Login);
+   }
+
+   logout = () =>{
+       this.props.redirectTo(Page.Logout);
+   }
+
     render(){
         return  (
 
@@ -27,6 +37,7 @@ class NavMenu extends React.Component<Props, State> {
             </button>
 
             <div className="collapse navbar-collapse" id="navbarSupportedContent">
+
                 <ul className="navbar-nav mr-auto">
             
                     <li className="nav-item active">
@@ -50,12 +61,23 @@ class NavMenu extends React.Component<Props, State> {
                     </li>
                     
                 </ul>
+                {!this.props.user.userEmal &&
+                    <div className="my-0 my-lg-0 md-3">
+                    <button className="btn btn-outline-success my-2 my-sm-0" onClick={this.login}>Login</button>
+                    </div>
+                }
+                {this.props.user.userEmal &&
+                    <div className="my-0 my-lg-0 md-3">
+                    Hello {this.props.user.userEmal}! 
+                    <button className="btn btn-outline-success my-2 my-sm-0" onClick={this.logout}>Logout</button>
+                    </div>
+                }
+                
+                {/* A search box if needed
                 <form className="form-inline my-2 my-lg-0">
-                    Hello {this.props.user.userEmal}!
-                    <NavLink className="nav-link" to="/Login">Login</NavLink>
-                    {/* <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
-                    <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> */}
-                </form>
+                    <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
+                    <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form> */}
             </div>
         </nav>
 

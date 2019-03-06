@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {BrowserRouter, Route, Redirect  } from 'react-router-dom'
+import {BrowserRouter, Route, Switch, Redirect  } from 'react-router-dom'
 import './App.css';
 import Home from './components/Home';
 import NavMenu from './components/NavMenu';
@@ -7,24 +7,26 @@ import Footer from './components/Footer';
 import Login from './components/Login'
 import Tracker from './components/Tracker'
 import axios from 'axios'
-
 import {connect} from 'react-redux'
 import { Dispatch } from 'redux'
+import {Page} from './class/Enums'
 
 interface State {
+  redirectTo?  :string;
   isLogged? : boolean;
   user : User;
 }
 
 interface Props {
+  //Redux dispatcher
   addUserId (event: any): void;
 }
 
 class App extends React.Component<Props, State>{
   constructor(props: any){
-    super(props);
-    
+    super(props);   
     this.state = {
+      redirectTo : undefined,
       isLogged: undefined,
       user  : {
         userId : "",
@@ -40,18 +42,17 @@ class App extends React.Component<Props, State>{
       if(res.data.result == true) {
         this.setState({
           isLogged : true,
+          redirectTo : "/"
         })  
 
         let url = "/api/Account/GetUserId/" + p.userLogin;
         axios.get(url).then(res =>{
-          console.log(res.data);
           this.setState({
             user : {
               userId : res.data.userId,
               userEmal : res.data.email,
             }
           })
-          //mapDispatchToProps.addUserId(this.state.user.userId);
           this.props.addUserId(res.data.userId);
         })
       }
@@ -67,20 +68,55 @@ class App extends React.Component<Props, State>{
     })
   }
 
+  logoutUser = () =>{
+    let url = "/api/Account/Logout/";
+    axios.get(url).then(res =>{
+        console.log("logout done!")
+     })  
+
+    this.setState({
+      isLogged : undefined,
+      user : {
+        userId : "",
+        userEmal : ""
+      }
+    })
+  }
+
+  redirectTo = (p : Page)=>{
+    switch (p) {
+      case Page.Login:
+      this.setState({
+        redirectTo : "/Login",
+      })
+        break;
+      case Page.Logout:
+        this.logoutUser();
+        this.setState({
+          redirectTo : "/Home",
+        })
+        break;
+      default:
+        break;
+    }
+  }
+
   public render() {
-    console.log(this.props);
     return (
       <BrowserRouter>
-      <div >
-        <NavMenu user={this.state.user} />
-        <div className="container" id="wrap">
-          <Route exact path='/' component={Home} />
-          <Route exact path='/login' render={props => <Login {...props} logUser={this.logUser} isLogged={this.state.isLogged} />} />
-          <Route exact path='/tracker' component={Tracker} />
-          {this.state.isLogged && <Redirect to='/' />}
+      <div>
+        <NavMenu user={this.state.user} redirectTo={this.redirectTo} />
+        <div className="container">
+          <Switch>
+            <Route exact path='/' component={Home} />
+            <Route exact path='/Home' component={Home} />
+            <Route exact path='/login' render={props => <Login {...props} logUser={this.logUser} isLogged={this.state.isLogged} />} />
+            <Route exact path='/tracker' component={Tracker} render={props => <Tracker {...props} redirectTo={this.redirectTo} />} />
+            {this.state.redirectTo != undefined && <Redirect to={this.state.redirectTo} />}
+          </Switch>
         </div>
         <div id="push"></div>
-       <Footer />
+        <Footer />
       </div>
       </BrowserRouter>
       
@@ -90,7 +126,7 @@ class App extends React.Component<Props, State>{
 
 const mapDispatchToProps = (dispatch:Dispatch) => {
   return {
-    //we want to call this function that will store userId in the store
+    //we add this function to our props
     addUserId: (userId:string) => {dispatch({type: 'ADD_USER_ID', userId : userId})}
   }
 }

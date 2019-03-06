@@ -1,6 +1,6 @@
 import * as React from 'react';
 import axios from 'axios'
-import { Redirect } from 'react-router-dom'
+import {Page} from '../class/Enums'
 
 interface State{
     deviceList : Array<Device>;
@@ -8,6 +8,7 @@ interface State{
 }
 
 interface Props{
+    redirectTo(p : any): void;
 }
 
 class Tracker extends React.Component<Props, State>{
@@ -29,7 +30,8 @@ class Tracker extends React.Component<Props, State>{
             })
         })
         .catch((error) =>{
-            console.log("not good");
+           console.log("not good");
+           this.props.redirectTo(Page.Login);
            this.setState({
                 ...this.state,isLogged : false
            })
@@ -48,10 +50,8 @@ class Tracker extends React.Component<Props, State>{
         ));
       
             return (
-                <div>
-               
-                   {(!this.state.isLogged && this.state.isLogged!=undefined) && <Redirect to='/login' />}
-                   
+                <div> 
+                   {/* Don't show the html is user not identify and switch to Login page */}
                    {this.state.isLogged!=undefined &&  
                     <div>
                        <br ></br>
