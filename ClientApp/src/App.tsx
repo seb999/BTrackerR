@@ -112,6 +112,7 @@ class App extends React.Component<Props, State>{
         <div className="container">
           <Switch>
             <Route exact path='/' component={Home} />
+            <Route exact path='/Home' component={Home} />
             <Route exact path='/Login' render={props => <Login {...props} logUser={this.logUser} isLogged={this.state.isLogged} />} />
             <Route exact path='/Tracker' render={props => <Tracker {...props} redirectTo={this.redirectTo} />} />
             

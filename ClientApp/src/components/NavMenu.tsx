@@ -1,14 +1,15 @@
 import * as React from 'react';
-// import { NavLink, Redirect } from 'react-router-dom'
-// import logo from '../images/Logo.png'
+import { withRouter } from 'react-router-dom'
+import logo from '../images/Logo.png'
 import './NavMenu.css';
 import {Page} from '../class/Enums'
 
-import {Button, Navbar, Nav, NavDropdown, Form, FormControl} from 'react-bootstrap';
+import {Button, Navbar, Nav, Form, FormControl} from 'react-bootstrap';
 
 interface Props {
     user  : User;
     redirectTo(p : any): void;
+    history? : any;
 }
 
 interface State {
@@ -24,9 +25,12 @@ class NavMenu extends React.Component<Props, State> {
             login : false,
             logout : false,
         }
+
+        console.log(props);
     }
 
    login = ()=> {
+     this.props.history.push("/about");
        this.setState({
            login : true,
            logout : false
@@ -46,25 +50,23 @@ class NavMenu extends React.Component<Props, State> {
 
 
 <Navbar bg="light" expand="lg">
-  <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
+  <Navbar.Brand href="#home"><img src={logo} className="logo" /></Navbar.Brand>
   <Navbar.Toggle aria-controls="basic-navbar-nav" />
   <Navbar.Collapse >
     <Nav className="mr-auto">
-      <Nav.Link href="#home">Home</Nav.Link>
-      <Nav.Link href="#link">Link</Nav.Link>
-      <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-        <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-        <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-        <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-        <NavDropdown.Divider />
-        <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-      </NavDropdown>
+      <Nav.Link href="home">Home</Nav.Link>
+      <Nav.Link href="Tracker">Tracker</Nav.Link>
+      <Nav.Link href="Map">Map</Nav.Link>
+      <Nav.Link href="About">About</Nav.Link>
+      <Nav.Link href="Contact">Contact</Nav.Link>
     </Nav>
     <Form inline>
       <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-      <Button variant="outline-success">Search</Button>
+      <Button variant="outline-success" onClick={this.login}>Login</Button>
     </Form>
   </Navbar.Collapse>
+  {/* {this.state.login && <Redirect to="/Login" />}
+  {this.state.logout && <Redirect to="/" />} */}
 </Navbar>
            
 
@@ -103,7 +105,7 @@ class NavMenu extends React.Component<Props, State> {
         //             </li>
                     
         //         </ul>
-        //         {this.state.login && <Redirect to="/Login" />}
+        ///        {this.state.login && <Redirect to="/Login" />}
         //         {this.state.logout && <Redirect to="/" />}
 
         //         {!this.props.user.userEmal &&
@@ -131,4 +133,4 @@ class NavMenu extends React.Component<Props, State> {
     }
 }
 
-export default NavMenu;
+export default withRouter(NavMenu);
