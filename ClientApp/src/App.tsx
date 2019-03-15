@@ -3,13 +3,14 @@ import {BrowserRouter, Route, Switch, Redirect  } from 'react-router-dom'
 import './App.css';
 import Home from './components/Home';
 import NavMenu from './components/NavMenu';
+import {NavCommand} from './components/NavMenu';
 import Footer from './components/Footer';
 import Login from './components/Login'
 import Tracker from './components/Tracker'
 import axios from 'axios'
 import {connect} from 'react-redux'
 import { Dispatch } from 'redux'
-import {Page} from './class/Enums'
+// import {Page} from './class/Enums'
 
 interface State {
   redirectTo?  :string;
@@ -20,6 +21,7 @@ interface State {
 interface Props {
   //Redux dispatcher
   addUserId (event: any): void;
+  history? : any;
 }
 
 class App extends React.Component<Props, State>{
@@ -85,37 +87,50 @@ class App extends React.Component<Props, State>{
     
   }
 
-  redirectTo = (p : Page)=>{
-    switch (p) {
-      case Page.Login:
-      this.setState({
-        redirectTo : "/Login",
-      })
-        break;
-      case Page.Logout:
-        this.logoutUser();
-        this.setState({
-          redirectTo : "/Home",
-        })
-        break;
-      default:
-        break;
-    }
+  // redirectTo = (p : Page)=>{
+  //   switch (p) {
+  //     case Page.Login:
+  //     console.log(this.props.history);
+  //    //this.props.history.push("/Login");
+  //     // this.setState({
+  //     //   redirectTo : "/Login",
+  //     // })
+  //       break;
+  //     case Page.Logout:
+  //       this.logoutUser();
+  //       this.setState({
+  //         redirectTo : "/Home",
+  //       })
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // }
+
+  redirectTo = ()=>{
+    console.log("Login from App file");
   }
 
   public render() {
+    const navCommands : Array<NavCommand> = [
+      {type : "NavLink", path: "/", text: "Home", isActive: false},
+      {type : "NavLink", path: "/Tracker", text: "Tracker", isActive: false},
+      {type : "NavLink", path: "/Map", text: "Map", isActive: false},
+      {type : "Button", path: "", text: "Login", isActive: false, onExecute: this.redirectTo},
+      {type : "Button", path: "", text: "Logout", isActive: false, onExecute: this.logoutUser},
+    ]
+
     return (
       <BrowserRouter>
       <div className="wrap">
       {this.state.redirectTo != undefined && <Redirect to={this.state.redirectTo} />}
-        <NavMenu user={this.state.user} redirectTo={this.redirectTo} />
+        <NavMenu commands={navCommands} user={this.state.user} redirectTo={this.redirectTo} />
         <div className="container">
           <Switch>
             <Route exact path='/' component={Home} />
             <Route exact path='/Home' component={Home} />
             <Route exact path='/Login' render={props => <Login {...props} logUser={this.logUser} isLogged={this.state.isLogged} />} />
             <Route exact path='/Tracker' render={props => <Tracker {...props} redirectTo={this.redirectTo} />} />
-            
           </Switch>
         </div>
         <div id="push" className="push"></div>
