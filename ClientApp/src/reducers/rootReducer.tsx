@@ -1,22 +1,35 @@
+// import axios from 'axios'
+import axios from 'axios';
+
 const initState = {
-    userId : "",
-    
-    posts:[
-        {id: '1', title:'abc', body:'123'},
-        {id: '2', title:'def', body:'456'},
-        {id: '3', title:'ghi', body:'789'}
-    ]
+  userId: "",
+  userEmail: "",
+  isLogged: false
 }
-const rootReducer = (state=initState, action:any) =>{
-    console.log(action.userId);
-    if (action.type ==='SET_USER_ID') {
-        return {
-            ...state,
-            userId : action.userId
-        }
-    }
-    
-    return state;
+
+const rootReducer = (state = initState, action: any) => {
+  const newStatew = { ...state };
+  const apiUrl = '/api/Account';
+  switch (action.type) {
+    case "LOG_USER":
+      let loginViewModel = { Email: action.payload.userLogin, Password: action.payload.userPassword, RememberMe: action.payload.rememberMe, Result: false, UserId: "" }
+      axios.post(apiUrl + "/LoginFromClient/", loginViewModel).then(res => {
+        console.log(res.data.userId);
+        newStatew.userId = res.data.userId;
+      })
+        .catch(error => {
+          throw (error);
+        });
+
+      return newStatew
+
+    case "LOG_USER_ASYN":
+      console.log("asynch " + action.payload.userId);
+      newStatew.userId = action.payload.userId;
+
+    default:
+      return state;
+  }
 }
 
 export default rootReducer

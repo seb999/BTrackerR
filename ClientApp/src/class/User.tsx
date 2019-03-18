@@ -1,5 +1,10 @@
 
 interface User {
     userId : string;
-    userEmal : string;
+    userEmail : string;
+    userLogin : string;
+    userPassword : string;
+    rememberMe : boolean;
+    
+
 }

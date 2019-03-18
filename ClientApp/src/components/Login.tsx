@@ -19,8 +19,6 @@ class Login extends React.Component<Props, State>{
              userLogin : "", 
              userPassword: "",
              rememberMe:false};
-
-             console.log("Login page constructor")
       }
 
     handleChange = (e:any) => {

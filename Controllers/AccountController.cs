@@ -70,7 +70,7 @@ namespace BTrackerR.Controllers
             {
                 _logger.LogInformation("User logged in.");
                 model.Result = true;
-                return model;
+                return await GetUserId2(model);
             }
             else
             {
@@ -88,6 +88,14 @@ namespace BTrackerR.Controllers
               return new LoginViewModel(){ 
                   Email = result.Email, 
                   UserId = result.Id};
+        }
+
+        [AllowAnonymous]
+        private async Task<LoginViewModel> GetUserId2(LoginViewModel loginViewModel){
+            var result =  await DbContext.Users.Where(p=>p.Email == loginViewModel.Email).Select(p=>p).FirstOrDefaultAsync();
+                loginViewModel.Email = result.Email;
+                loginViewModel.UserId = result.Id;
+              return loginViewModel;
         }
 
         #endregion
