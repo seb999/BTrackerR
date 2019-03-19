@@ -1,11 +1,16 @@
 import * as React from 'react';
+import { Dispatch } from 'redux'
+import * as actionCreator from '../actions/actions'
+import { connect } from 'react-redux'
 
 interface Props {
     logUser(event: any): void;
-    isLogged? : boolean;
+    history?: any;
+    userId : any;
  }
 
 interface State {
+    isLogged? : boolean;
     userLogin : string,
     userPassword : string,
     rememberMe : boolean
@@ -36,11 +41,18 @@ class Login extends React.Component<Props, State>{
     handleSubmit = (e :any) => {
         e.preventDefault();
         this.props.logUser(this.state); 
+         
     }
+
+    toto = (e:any)=>{
+        e.preventDefault();
+        this.setState({ isLogged : false})
+    };
     
     render(){
         return (
             <div>
+                {this.props.userId !=="" ? this.props.history.push("/Home") : this.toto}
                 <div className="row">
                     <div className="col-sm-9 col-md-7 col-lg-5 mx-auto">
                         <div className="card card-signin my-5">
@@ -65,13 +77,11 @@ class Login extends React.Component<Props, State>{
                                     <button className="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign in</button>
 
                                 </form>
-                                {(!this.props.isLogged && this.props.isLogged!=undefined) && <Child />}
+                                {(!this.state.isLogged && this.state.isLogged!=undefined) && <Child />}
                             </div>
                         </div>
                     </div>
-                
                 </div>
-               
             </div>
         )
     }
@@ -81,4 +91,18 @@ const Child = () =>(
      <span className="badge badge-danger">Login failed!</span>
 )
 
-export default Login;
+const mapDispatchToProps = (dispatch: Dispatch) => {
+    return {
+      logUser: (user: any) => dispatch<any>(actionCreator.logUserAsyn(user))
+    }
+  }
+  
+  //map the props of this class to the root redux state
+  const mapStateToProps = (state: any) => {
+    return {
+      isLogged: state.isLogged,
+      userId: state.userId
+    }
+  }
+
+  export default connect(mapStateToProps, mapDispatchToProps)(Login);

@@ -2,22 +2,21 @@ import * as React from 'react';
 import { withRouter } from 'react-router-dom'
 import logo from '../images/Logo.png'
 import './NavMenu.css';
-// import {Page} from '../class/Enums'
 import MyNavLink from './MyNavLink'
-// import {Button, Navbar, Nav, Form, FormControl} from 'react-bootstrap';
+import { connect } from 'react-redux'
 
 export interface NavCommand {
   type: string,
   path: string,
   text: string,
   isActive: boolean,
-  onExecute?(p: any): void;
 }
 
 export interface Props {
   history?: any;
   commands: NavCommand[];
-  user: User;
+  userEmail : string;
+  isLogged : string;
 }
 
 export interface State { }
@@ -29,6 +28,10 @@ class NavMenu extends React.Component<Props, State> {
 
   login = () => {
     this.props.history.push("/Login");
+  }
+
+  logout = () => {
+    this.props.history.push("/Home");
   }
 
   render() {
@@ -43,46 +46,44 @@ class NavMenu extends React.Component<Props, State> {
             {this.props.commands.map((link, i) => {
               if (link.type === "NavLink") {
                 return (
-                  <MyNavLink
+                  <MyNavLink key={i}
                     path={link.path}
                     text={link.text}
                     isActive={link.isActive}
-                    key={i} />
-                )
+                  />
+                );
               }
-              return (<div></div>)
+              return (<div key={i}></div>)
             })}
           </ul>
 
-          Hello {this.props.user.userEmail}!
+          Hello {this.props.userEmail}! {this.props.isLogged}
                  {this.props.commands.map((link, i) => {
             if (link.type === "Button") {
               return (
-                <button className={link.isActive ? "btn btn-outline-success my-2 my-sm-0" : "btn btn-outline-success my-2 my-sm-0 d-none"}
-                  onClick={link.text == 'Login' ? this.login : link.onExecute}>{link.text}
+               
+                <button key={i} className={link.isActive ? "btn btn-outline-success my-2 my-sm-0" : "btn btn-outline-success my-2 my-sm-0 d-none"}
+                  onClick={link.text == 'Login' ? this.login : this.logout}>{link.text}
                 </button>
+              
               )
             }
-            return (<div></div>)
+            return (<div key={i}></div>)
           })}
-
-          {/* {this.state.login && <Redirect to="/Login" />}
-                {this.state.logout && <Redirect to="/" />}
-
-               
-                 */}
-          {/* A search box if needed
-                <form className="form-inline my-2 my-lg-0">
-                    <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
-                    <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                </form> */}
         </div>
       </nav>
-
-
     )
   }
 }
 
-export default withRouter(NavMenu);
+//map the props of this class to the root redux state
+const mapStateToProps = (state: any) => {
+  return {
+    userId: state.userId,
+    userEmail: state.userEmail,
+    isLogged: state.isLogged,
+  }
+}
+
+export default connect(mapStateToProps)(withRouter(NavMenu));
 

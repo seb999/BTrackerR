@@ -6,7 +6,6 @@ export interface Props {
     isActive : boolean,
     path : string,
     text : string,
-    key : number
 }
 
 class MyNavLink extends React.Component<Props> {

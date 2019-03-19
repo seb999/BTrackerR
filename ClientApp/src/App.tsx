@@ -7,29 +7,24 @@ import { NavCommand } from './components/NavMenu';
 import Footer from './components/Footer';
 import Login from './components/Login'
 import Tracker from './components/Tracker'
-import axios from 'axios'
 import { connect } from 'react-redux'
 import './actions/actions'
 import { Dispatch } from 'redux'
-// import { LOG_USER} from './actions/types';
 import * as actionCreator from './actions/actions'
-// import {Page} from './class/Enums'
 
 interface State {
   redirectTo?: string;
-  isLogged?: boolean;
   user: User;
   navCommands: Array<NavCommand>;
-
 }
 
 interface Props {
   //Redux dispatcher
-  addUserId(event: any): void;
   logUser(event: any): void;
   history?: any;
   isLogged: boolean;
   userId: string;
+  userEmail : string;
 }
 
 class App extends React.Component<Props, State>{
@@ -38,14 +33,13 @@ class App extends React.Component<Props, State>{
 
     this.state = {
       navCommands: [
-        { type: "NavLink", path: "/", text: "Home", isActive: false },
-        { type: "NavLink", path: "/Tracker", text: "Tracker", isActive: false },
-        { type: "NavLink", path: "/Map", text: "Map", isActive: false },
-        { type: "Button", path: "", text: "Login", isActive: true },
-        { type: "Button", path: "", text: "Logout", isActive: false, onExecute: this.logoutUser },
+        { type: "NavLink", path: "/", text: "Home", isActive: false},
+        { type: "NavLink", path: "/Tracker", text: "Tracker", isActive: false},
+        { type: "NavLink", path: "/Map", text: "Map", isActive: false},
+        { type: "Button", path: "", text: "Login", isActive: !this.props.isLogged},
+        { type: "Button", path: "", text: "Logout", isActive: this.props.isLogged},
       ],
       redirectTo: undefined,
-      isLogged: undefined,
       user: {
         userId: "",
         userEmail: "",
@@ -53,68 +47,42 @@ class App extends React.Component<Props, State>{
     };
   }
 
-  logUser = (p: User) => {
-    //from reducer
-    this.props.logUser(p);
-
-    // if (this.props.userId != "") {
-    //   this.setState({
-    //     isLogged: true
-    //   })
-    // }
-    // else {
-    //   this.setState({
-    //     isLogged: false
-    //   });
-    // }
-
-    console.log(this.props.userId);
-
-  }
-
-logoutUser = () => {
-  this.props.addUserId("");
-  let url = "/api/Account/Logout/";
-  axios.get(url).then(res => {
-    console.log("logout done!")
-  })
-
-  // this.setState({
-  //   isLogged: undefined,
-  //   user: {
-  //     userId: "",
-  //     userEmail: ""
-  //   }
-  // })
-
-}
-
 redirectTo = () => {
   console.log(this.props);
 }
+
+switchNavBar = () =>{
+  this.setState({
+      navCommands: [
+        { type: "NavLink", path: "/", text: "Home", isActive: false },
+        { type: "NavLink", path: "/Tracker", text: "Tracker", isActive: false },
+        { type: "NavLink", path: "/Map", text: "Map", isActive: false },
+        { type: "Button", path: "", text: "Login", isActive: false },
+        { type: "Button", path: "", text: "Logout", isActive: true },
+      ],
+  })
+};
 
   public render() {
 
   return (
 
     <BrowserRouter>
-
       <div>
-      {this.props.userId}
+      {this.props.userId !=="" && this.switchNavBar}
         {this.state.redirectTo != undefined && <Redirect to={this.state.redirectTo} />}
-        <NavMenu commands={this.state.navCommands} user={this.state.user} />
+        <NavMenu commands={this.state.navCommands} />
         <div className="container">
           <Switch>
             <Route exact path='/' component={Home} />
             <Route exact path='/Home' component={Home} />
-            <Route exact path='/Login' render={props => <Login {...props} logUser={this.logUser} isLogged={this.state.isLogged} />} />
+            <Route exact path='/Login' component={Login} />
             <Route exact path='/Tracker' render={props => <Tracker {...props} redirectTo={this.redirectTo} />} />
           </Switch>
         </div>
         <Footer />
       </div>
     </BrowserRouter>
-
   );
 }
 }
@@ -122,10 +90,7 @@ redirectTo = () => {
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     //we add this function to our props
-    addUserId: (userId: string) => { dispatch({ type: 'SET_USER_ID', userId: userId }) },
-    // logUser : (user:User) => {dispatch({type: LOG_USER, user : user})}
-    //logUser: (user: any) => dispatch(actionCreator.logUser(user)),
-
+    //addUserId: (userId: string) => { dispatch({ type: 'SET_USER_ID', userId: userId }) },
     logUser: (user: any) => dispatch<any>(actionCreator.logUserAsyn(user))
   }
 }
@@ -134,7 +99,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
 const mapStateToProps = (state: any) => {
   return {
     isLogged: state.isLogged,
-    userId: state.userId
+    userId: state.userId,
+    userEmail : state.userEmail,
   }
 }
 

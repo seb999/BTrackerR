@@ -1,53 +1,42 @@
  import axios from 'axios';
  const apiUrl = '/api/Account';    
-// import { Dispatch } from 'redux'   
-
-// interface payLoad {
-//   type :string;
-//   paylaod : any;
-// }
-
-
-
-export const logUser = (user: User) => {
-  return {
-    type: "LOG_USER",
-    payload: user
-  }
-};
 
 export const logUserAsyn = (user: any) => {
-  return (dispatch : any) => {
+  return async (dispatch : any) => {
      let loginViewModel = {Email : user.userLogin, Password : user.userPassword, RememberMe : user.rememberMe, Result:false, UserId:""}
 
-     return axios.post<any>(apiUrl + "/LoginFromClient/", loginViewModel).then(res =>{
-        return dispatch(loguserSuccess(res.data))
-      })
-      .catch(error => {
-        throw(error);
-      });
+     try {
+      const res = await axios.post<any>(apiUrl + "/LoginFromClient/", loginViewModel);
+      return dispatch(logUserSuccess(res.data));
+    }
+    catch (error) {
+      throw (error);
+    }
   };
+}
 
-  // return {
-  //   type: "LOG_USER_ASYN",
-  //   payload: user
-  // }
-
-
-  // return {
-  //   type: "LOG_USER_ASYN",
-  //   payload: 
-
-  //     setTimeout(() => {
-  //       return 1234
-  //     }, 3000)
-  // }
-};
-
-
-export const loguserSuccess = (data: any) => {
+export const logUserSuccess = (data: any) => {
   return {
     type: "LOG_USER_ASYN",
     payload: data
   }
-};
+}
+
+export const logoutUserAsyn = (user: any) => {
+  return async (dispatch : any) => {
+     try {
+      const res = await axios.get<any>(apiUrl + "/Logout/");
+      return dispatch(logoutuserSuccess(res.data));
+    }
+    catch (error) {
+      throw (error);
+    }
+  };
+}
+
+export const logoutuserSuccess = (data: any) => {
+  return {
+    type: "LOGOUT_USER_ASYN",
+    payload: {}
+  }
+}
