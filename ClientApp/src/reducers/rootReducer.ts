@@ -24,8 +24,8 @@ const rootReducer = (state = initState, action: any) => {
       return newStatew
 
     case "LOG_USER_ASYN":
-      console.log("asynch " + action.payload.userId);
-      newStatew.userId = action.payload.userId;
+      console.log("asynch " + action.payload);
+      newStatew.userId = action.payload;
 
     default:
       return state;

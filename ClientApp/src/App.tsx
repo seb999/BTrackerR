@@ -46,10 +46,10 @@ class App extends React.Component<Props, State>{
       ],
       redirectTo: undefined,
       isLogged: undefined,
-      // user: {
-      //   userId: "",
-      //   userEmail: "",
-      // }
+      user: {
+        userId: "",
+        userEmail: "",
+      }
     };
   }
 
@@ -126,7 +126,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     // logUser : (user:User) => {dispatch({type: LOG_USER, user : user})}
     //logUser: (user: any) => dispatch(actionCreator.logUser(user)),
 
-    logUser: (user: any) => dispatch(actionCreator.logUserAsyn(user))
+    logUser: (user: any) => dispatch<any>(actionCreator.logUserAsyn(user))
   }
 }
 
