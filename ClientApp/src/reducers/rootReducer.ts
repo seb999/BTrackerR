@@ -8,9 +8,11 @@ const rootReducer = (state = initState, action: any) => {
   const newState = { ...state };
   switch (action.type) {
     case "LOG_USER_ASYN":
-      newState.userId = action.payload.userId;
-      newState.userEmail = action.payload.email;
-      newState.isLogged = action.payload.result;
+      if(action.payload.result){
+        newState.userId = action.payload.userId;
+        newState.userEmail = action.payload.email;
+        newState.isLogged = action.payload.result;
+      }
       return newState;
 
     case "LOGOUT_USER_ASYN":

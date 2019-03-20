@@ -8,7 +8,6 @@ import Footer from './components/Footer';
 import Login from './components/Login'
 import Tracker from './components/Tracker'
 import { connect } from 'react-redux'
-import './actions/actions'
 import { Dispatch } from 'redux'
 import * as actionCreator from './actions/actions'
 
@@ -69,10 +68,10 @@ switchNavBar = () =>{
 
     <BrowserRouter>
       <div>
-      {this.props.userId !=="" && this.switchNavBar}
         {this.state.redirectTo != undefined && <Redirect to={this.state.redirectTo} />}
         <NavMenu commands={this.state.navCommands} />
         <div className="container">
+        <button onClick={this.switchNavBar} ></button>
           <Switch>
             <Route exact path='/' component={Home} />
             <Route exact path='/Home' component={Home} />

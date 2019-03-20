@@ -22,7 +22,7 @@ export const logUserSuccess = (data: any) => {
   }
 }
 
-export const logoutUserAsyn = (user: any) => {
+export const logoutUserAsyn = () => {
   return async (dispatch : any) => {
      try {
       const res = await axios.get<any>(apiUrl + "/Logout/");

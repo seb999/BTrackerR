@@ -4,6 +4,8 @@ import logo from '../images/Logo.png'
 import './NavMenu.css';
 import MyNavLink from './MyNavLink'
 import { connect } from 'react-redux'
+import { Dispatch } from 'redux'
+import * as actionCreator from '../actions/actions'
 
 export interface NavCommand {
   type: string,
@@ -17,6 +19,7 @@ export interface Props {
   commands: NavCommand[];
   userEmail : string;
   isLogged : string;
+  logoutUser(): void;
 }
 
 export interface State { }
@@ -31,6 +34,7 @@ class NavMenu extends React.Component<Props, State> {
   }
 
   logout = () => {
+    this.props.logoutUser();
     this.props.history.push("/Home");
   }
 
@@ -85,5 +89,12 @@ const mapStateToProps = (state: any) => {
   }
 }
 
-export default connect(mapStateToProps)(withRouter(NavMenu));
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {
+    //we add this function to our props
+    logoutUser: () => dispatch<any>(actionCreator.logoutUserAsyn())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(NavMenu));
 

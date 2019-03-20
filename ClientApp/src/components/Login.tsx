@@ -7,10 +7,11 @@ interface Props {
     logUser(event: any): void;
     history?: any;
     userId : any;
+    isLogged? : boolean;
  }
 
 interface State {
-    isLogged? : boolean;
+  
     userLogin : string,
     userPassword : string,
     rememberMe : boolean
@@ -44,15 +45,19 @@ class Login extends React.Component<Props, State>{
          
     }
 
-    toto = (e:any)=>{
-        e.preventDefault();
-        this.setState({ isLogged : false})
-    };
-    
+    componentDidMount =()=> {
+        // if(this.props.userId !==""){
+        //     this.setState({ isLogged : true})
+        // }
+        // else {
+        //     this.setState({ isLogged : false})
+        // }
+    }
+
     render(){
         return (
             <div>
-                {this.props.userId !=="" ? this.props.history.push("/Home") : this.toto}
+                {this.props.userId !=="" ? this.props.history.push("/Home") : ''}
                 <div className="row">
                     <div className="col-sm-9 col-md-7 col-lg-5 mx-auto">
                         <div className="card card-signin my-5">
@@ -77,7 +82,7 @@ class Login extends React.Component<Props, State>{
                                     <button className="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign in</button>
 
                                 </form>
-                                {(!this.state.isLogged && this.state.isLogged!=undefined) && <Child />}
+                                {(!this.props.isLogged && this.props.isLogged!=undefined) && <Child />}
                             </div>
                         </div>
                     </div>
