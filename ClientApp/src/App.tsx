@@ -50,18 +50,6 @@ redirectTo = () => {
   console.log(this.props);
 }
 
-switchNavBar = () =>{
-  this.setState({
-      navCommands: [
-        { type: "NavLink", path: "/", text: "Home", isActive: false },
-        { type: "NavLink", path: "/Tracker", text: "Tracker", isActive: false },
-        { type: "NavLink", path: "/Map", text: "Map", isActive: false },
-        { type: "Button", path: "", text: "Login", isActive: false },
-        { type: "Button", path: "", text: "Logout", isActive: true },
-      ],
-  })
-};
-
   public render() {
 
   return (
@@ -71,7 +59,6 @@ switchNavBar = () =>{
         {this.state.redirectTo != undefined && <Redirect to={this.state.redirectTo} />}
         <NavMenu commands={this.state.navCommands} />
         <div className="container">
-        <button onClick={this.switchNavBar} ></button>
           <Switch>
             <Route exact path='/' component={Home} />
             <Route exact path='/Home' component={Home} />

@@ -1,7 +1,9 @@
+
 const initState = {
   userId: "",
   userEmail: "",
-  isLogged: false
+  isLogged: false,
+  isFirstRender : true,
 }
 
 const rootReducer = (state = initState, action: any) => {
@@ -12,6 +14,12 @@ const rootReducer = (state = initState, action: any) => {
         newState.userId = action.payload.userId;
         newState.userEmail = action.payload.email;
         newState.isLogged = action.payload.result;
+        newState.isFirstRender = false;
+      }
+      else{
+        newState.userId = "";
+        newState.isLogged = false;
+        newState.isFirstRender = false;
       }
       return newState;
 
@@ -19,6 +27,7 @@ const rootReducer = (state = initState, action: any) => {
       newState.userId = "";
       newState.userEmail = "";
       newState.isLogged = false;
+      newState.isFirstRender = true;
       return newState;
     default:
       return state;

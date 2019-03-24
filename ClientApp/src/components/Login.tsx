@@ -8,18 +8,18 @@ interface Props {
     history?: any;
     userId : any;
     isLogged? : boolean;
+    isFirstRender  :boolean
  }
 
 interface State {
-  
     userLogin : string,
     userPassword : string,
-    rememberMe : boolean
+    rememberMe : boolean,
 }
 
 class Login extends React.Component<Props, State>{
+
     constructor(props: any) {
-       
         super(props)
         this.state = {
              userLogin : "", 
@@ -40,25 +40,17 @@ class Login extends React.Component<Props, State>{
     }
     
     handleSubmit = (e :any) => {
-        e.preventDefault();
-        this.props.logUser(this.state); 
-         
-    }
-
-    componentDidMount =()=> {
-        // if(this.props.userId !==""){
-        //     this.setState({ isLogged : true})
-        // }
-        // else {
-        //     this.setState({ isLogged : false})
-        // }
+        e.preventDefault();     
+        this.props.logUser(this.state); //from redux       
     }
 
     render(){
+        {this.props.userId !== "" ? this.props.history.push("/home") : ""}
+
         return (
             <div>
-                {this.props.userId !=="" ? this.props.history.push("/Home") : ''}
                 <div className="row">
+                {this.props.userId}
                     <div className="col-sm-9 col-md-7 col-lg-5 mx-auto">
                         <div className="card card-signin my-5">
                             <div className="card-body">
@@ -82,7 +74,7 @@ class Login extends React.Component<Props, State>{
                                     <button className="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign in</button>
 
                                 </form>
-                                {(!this.props.isLogged && this.props.isLogged!=undefined) && <Child />}
+                                {(!this.props.isFirstRender && this.props.userId=="") && <Child />}
                             </div>
                         </div>
                     </div>
@@ -93,12 +85,12 @@ class Login extends React.Component<Props, State>{
 }
 
 const Child = () =>(
-     <span className="badge badge-danger">Login failed!</span>
+     <span className="badge badge-danger">Invalide user or password!</span>
 )
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
-      logUser: (user: any) => dispatch<any>(actionCreator.logUserAsyn(user))
+      logUser: (user: any) => dispatch<any>(actionCreator.logUserAsyn(user)).then((p:any)=>{})
     }
   }
   
@@ -106,7 +98,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
   const mapStateToProps = (state: any) => {
     return {
       isLogged: state.isLogged,
-      userId: state.userId
+      userId: state.userId,
+      isFirstRender: state.isFirstRender,
     }
   }
 

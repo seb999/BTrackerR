@@ -17,8 +17,8 @@ export interface NavCommand {
 export interface Props {
   history?: any;
   commands: NavCommand[];
-  userEmail : string;
-  isLogged : string;
+  userEmail: string;
+  isLogged: string;
   logoutUser(): void;
 }
 
@@ -62,18 +62,26 @@ class NavMenu extends React.Component<Props, State> {
           </ul>
 
           Hello {this.props.userEmail}! {this.props.isLogged}
-                 {this.props.commands.map((link, i) => {
+          {/* {this.props.commands.map((link, i) => {
             if (link.type === "Button") {
               return (
-               
+
                 <button key={i} className={link.isActive ? "btn btn-outline-success my-2 my-sm-0" : "btn btn-outline-success my-2 my-sm-0 d-none"}
                   onClick={link.text == 'Login' ? this.login : this.logout}>{link.text}
                 </button>
-              
+
               )
             }
             return (<div key={i}></div>)
-          })}
+          })} */}
+
+          <button className={this.props.isLogged ? "btn btn-outline-success my-2 my-sm-0" : "btn btn-outline-success my-2 my-sm-0 d-none"}
+            onClick={this.logout}>Logout
+          </button>
+
+          <button className={!this.props.isLogged ? "btn btn-outline-success my-2 my-sm-0" : "btn btn-outline-success my-2 my-sm-0 d-none"}
+            onClick={this.login}>Login
+          </button>
         </div>
       </nav>
     )
