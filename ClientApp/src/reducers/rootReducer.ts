@@ -4,6 +4,7 @@ const initState = {
   userEmail: "",
   isLogged: false,
   isFirstRender : true,
+  deviceList : new Array<Device>()
 }
 
 const rootReducer = (state = initState, action: any) => {
@@ -28,6 +29,10 @@ const rootReducer = (state = initState, action: any) => {
       newState.userEmail = "";
       newState.isLogged = false;
       newState.isFirstRender = true;
+      return newState;
+
+    case "TRACKER_LIST" :
+      newState.deviceList = action.payload
       return newState;
     default:
       return state;

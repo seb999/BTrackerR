@@ -1,46 +1,47 @@
 import * as React from 'react';
-import axios from 'axios'
-import {Page} from '../class/Enums'
+import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
+import { withRouter } from 'react-router-dom';
+import * as actionCreator from '../actions/actions';
+import TrackerPopup from "./TrackerPopup"
 
-interface State{
-    deviceList : Array<Device>;
-    isLogged? : boolean;
+
+interface State {
+    show: boolean,
+
 }
 
-interface Props{
-    redirectTo(p : any): void;
+interface Props {
+    history?: any;
+    isLogged?: boolean;
+    getTrackerList(): void;
+    deviceList: Array<Device>;
 }
 
 class Tracker extends React.Component<Props, State>{
-    constructor(props: any){
+    constructor(props: any) {
         super(props);
-        
+
         this.state = {
-            deviceList  : new Array<Device>(),
-            isLogged : undefined,
-          }
+            show: false,
         };
-      
-    componentDidMount(){
-        let url = "/api/MyDevice/GetDeviceList/";
-        axios.get(url).then(res =>{
-            this.setState({
-                deviceList : res.data,
-                isLogged  :true
-            })
-        })
-        .catch((error) =>{
-           console.log("not good");
-           this.props.redirectTo(Page.Login);
-           this.setState({
-                ...this.state,isLogged : false
-           })
-        })
+    };
+
+    componentDidMount() {
+        //Call from redux
+        !this.props.isLogged ? this.props.history.push("/Login") : this.props.getTrackerList();
     }
 
-    render(){
+    handleClose = () =>{
+        this.setState({ show: false });
+    }
 
-        let displayList = this.state.deviceList.map((item, index) => (
+    handleShow = () => {
+        this.setState({ show: true });
+    }
+
+    render() {
+        let displayList = this.props.deviceList.map((item, index) => (
             <tr key={index}>
                 <td>{item.deviceId}</td>
                 <td>{item.deviceEUI}</td>
@@ -48,32 +49,53 @@ class Tracker extends React.Component<Props, State>{
                 <td>{item.userId}</td>
             </tr>
         ));
-      
-            return (
-                <div> 
-                   {/* Don't show the html is user not identify and switch to Login page */}
-                   {this.state.isLogged!=undefined &&  
+
+        return (
+            <div>
+                {/* Don't show the html is user not identify and switch to Login page */}
+                {this.props.isLogged &&
                     <div>
-                       <br ></br>
-                        <button type="button" className="btn btn-primary">Add new tracker</button>
+                        <br ></br>
+                        <button type="button" className="btn btn-primary" onClick={this.handleShow}>Add new tracker</button>
                         <br /><br />
-                       <table className="table" >
-                           <thead className="thead-dark">
-                           <tr>
-                               <th scope="col">Device Id</th>
-                               <th scope="col">EUI</th>
-                               <th scope="col">Usage</th>
-                               <th scope="col">UserId</th>
-                           </tr>
-                           </thead>
-                           <tbody>
-                               {displayList}
-                           </tbody>
-                       </table>
+                        <table className="table" >
+                            <thead className="thead-dark">
+                                <tr>
+                                    <th scope="col">Device Id</th>
+                                    <th scope="col">EUI</th>
+                                    <th scope="col">Usage</th>
+                                    <th scope="col">User Id</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {displayList}
+                            </tbody>
+                        </table>
+
+                        <TrackerPopup
+                            show={this.state.show}
+                            hide={this.handleClose}
+                            />
                     </div>
-                   }  
-                </div>)
+                }
+            </div>)
     }
 }
 
-export default Tracker
+//map the props of this class to the root redux state
+const mapStateToProps = (state: any) => {
+    return {
+        //isLogged: state.isLogged,
+        isLogged: true,
+        deviceList: state.deviceList,
+    }
+}
+
+const mapDispatchToProps = (dispatch: Dispatch) => {
+    return {
+        //we add this function to our props
+        getTrackerList: () => dispatch<any>(actionCreator.trackerList())
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Tracker));
