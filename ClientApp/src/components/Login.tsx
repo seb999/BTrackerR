@@ -90,7 +90,7 @@ const Child = () =>(
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
-      logUser: (user: any) => dispatch<any>(actionCreator.logUserAsyn(user)).then((p:any)=>{})
+      logUser: (user: any) => dispatch<any>(actionCreator.default.account.logUserAsyn(user)).then((p:any)=>{})
     }
   }
   

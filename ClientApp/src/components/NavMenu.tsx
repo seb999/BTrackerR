@@ -100,7 +100,7 @@ const mapStateToProps = (state: any) => {
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     //we add this function to our props
-    logoutUser: () => dispatch<any>(actionCreator.logoutUserAsyn())
+    logoutUser: () => dispatch<any>(actionCreator.default.account.logoutUserAsyn())
   }
 }
 

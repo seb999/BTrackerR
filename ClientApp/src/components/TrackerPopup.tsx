@@ -84,7 +84,7 @@ const mapStateToProps = (state: any) => {
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
         //we add this function to our props
-        getTrackerList: () => dispatch<any>(actionCreator.trackerList())
+        getTrackerList: () => dispatch<any>(actionCreator.default.tracker.trackerList())
     }
 }
 
