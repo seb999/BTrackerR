@@ -36,18 +36,7 @@ namespace Antea25.Controllers
             return DbContext.Device
                     .Where(p => p.UserId == User.Claims.FirstOrDefault().Value)
                     .Where(p=>p.DeviceIsDeleted.GetValueOrDefault() != true)
-                    .OrderBy(p => p.DateAdded).ToList();
-        }
-
-        ///Save a new device
-        [HttpPost]
-        [Route("/api/[controller]/SaveDevice")]
-        public int SaveDevice([FromBody] Device device)
-        {
-            device.UserId = User.Claims.FirstOrDefault().Value;
-            DbContext.Add(device);
-            DbContext.SaveChanges();
-            return DbContext.Device.Select(p=>p.DeviceId).LastOrDefault();
+                    .OrderByDescending(p => p.DeviceId).ToList();
         }
 
         #endregion
@@ -65,6 +54,32 @@ namespace Antea25.Controllers
                     .OrderBy(p => p.DateAdded).ToList();
 
             return result;
+        }
+
+        ///Save a new device
+        [HttpPost]
+        [Route("/api/[controller]/SaveDevice")]
+        public List<Device> SaveDevice([FromBody] Device device)
+        {
+            device.UserId = User.Claims.FirstOrDefault().Value;
+            DbContext.Add(device);
+            DbContext.SaveChanges();
+            return GetDeviceList();
+        }
+
+         ///Save a new device
+        [HttpGet]
+        [Authorize]
+        [Route("/api/[controller]/DeleteDevice")]
+        public List<Device> DeleteDevice(int deviceId)
+        {
+            //Remove all entry from GpsPosition table
+            DbContext.GpsPosition.RemoveRange(DbContext.GpsPosition.Where(predicate=>predicate.DeviceId == deviceId).Select(p=>p).ToList());
+            //Remove device from Device table
+            DbContext.Device.Remove(DbContext.Device.Where(predicate=>predicate.DeviceId == deviceId).FirstOrDefault());
+            
+            DbContext.SaveChanges();
+            return GetDeviceList();
         }
 
         #endregion

@@ -4,10 +4,12 @@ import { Dispatch } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as actionCreator from '../actions/actions';
 import TrackerPopup from "./TrackerPopup"
+import ConfirmPopup from "./Popup/ConfirmPopup"
 
 
 interface State {
-    show: boolean,
+    showAddTracker: boolean,
+    showConfirmPopup: boolean
 
 }
 
@@ -16,6 +18,7 @@ interface Props {
     isLogged?: boolean;
     getTrackerList(): void;
     deviceList: Array<Device>;
+    isDeviceSaved: boolean;
 }
 
 class Tracker extends React.Component<Props, State>{
@@ -23,7 +26,8 @@ class Tracker extends React.Component<Props, State>{
         super(props);
 
         this.state = {
-            show: false,
+            showAddTracker: false,
+            showConfirmPopup: false,
         };
     };
 
@@ -33,11 +37,21 @@ class Tracker extends React.Component<Props, State>{
     }
 
     handleClose = () =>{
-        this.setState({ show: false });
+        this.setState({ showAddTracker: false });
     }
 
     handleShow = () => {
-        this.setState({ show: true });
+        this.setState({ showAddTracker: true });
+    }
+
+    handleDeleteTracker = (p:any) =>{
+        this.setState({ showConfirmPopup: true });
+    }
+
+    handleConfirmDelete = (p:any) =>{
+        if(p) alert("delete me");
+        
+        this.setState({ showConfirmPopup: false });
     }
 
     render() {
@@ -47,6 +61,7 @@ class Tracker extends React.Component<Props, State>{
                 <td>{item.deviceEUI}</td>
                 <td>{item.deviceDescription}</td>
                 <td>{item.userId}</td>
+                <td><button className="btn btn-outline-success my-2" onClick={() => this.handleDeleteTracker(item.deviceId)}>del</button></td>
             </tr>
         ));
 
@@ -56,7 +71,11 @@ class Tracker extends React.Component<Props, State>{
                 {this.props.isLogged &&
                     <div>
                         <br ></br>
-                        <button type="button" className="btn btn-primary" onClick={this.handleShow}>Add new tracker</button>
+                        <div >
+                            <button style={{ float: "left" }} type="button" className="btn btn-primary" onClick={this.handleShow}>Add new tracker</button>
+                            <div style={{ float: "right", height:"40px", padding:"7px" }} className={this.props.isDeviceSaved ? "alert alert-success" : "d-none"} role="alert"> Saved!</div>
+                        </div>
+                      
                         <br /><br />
                         <table className="table" >
                             <thead className="thead-dark">
@@ -65,6 +84,7 @@ class Tracker extends React.Component<Props, State>{
                                     <th scope="col">EUI</th>
                                     <th scope="col">Usage</th>
                                     <th scope="col">User Id</th>
+                                    <th scope="col">delete</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -72,10 +92,9 @@ class Tracker extends React.Component<Props, State>{
                             </tbody>
                         </table>
 
-                        <TrackerPopup
-                            show={this.state.show}
-                            hide={this.handleClose}
-                            />
+                        <TrackerPopup show={this.state.showAddTracker} hide={this.handleClose}/>
+
+                        <ConfirmPopup show={this.state.showConfirmPopup} hide={this.handleConfirmDelete} title="Delete tracker" content="Do you really want to delete this tracker ?"/>
                     </div>
                 }
             </div>)
@@ -88,6 +107,7 @@ const mapStateToProps = (state: any) => {
         //isLogged: state.isLogged,
         isLogged: true,
         deviceList: state.deviceList,
+        isDeviceSaved: state.isDeviceSaved,
     }
 }
 

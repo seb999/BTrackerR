@@ -7,12 +7,14 @@ import { Dispatch } from 'redux';
 interface State { 
     deviceEui  : string;
     deviceDescription : string;
+    
 }
 
 interface Props {
     userId : string,
     show: boolean,
     hide() : void,
+    saveTracker(p : any) : void;
 }
 
 class TrackerPopup extends React.Component<Props, State>{
@@ -26,9 +28,12 @@ class TrackerPopup extends React.Component<Props, State>{
         } as any)
     }
 
-    handleSaveDevice = () =>{
+    handleSaveDevice = (e:any) =>{
+        e.preventDefault(); 
+        console.log(this.state);
+        this.props.saveTracker(this.state);
         //Save device in Redux here
-        this.props.hide();
+        this.props.hide(); 
     }
 
     render() {
@@ -39,8 +44,7 @@ class TrackerPopup extends React.Component<Props, State>{
                                 <Modal.Title>Add new device</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                {/* <form className="form-signin" onSubmit={this.handleSubmit}> */}
-                                <form className="form-signin">
+                                <form id="newTrackerForm" className="form-signin" onSubmit={this.handleSaveDevice}>
 
                                     <div className="form-label-group">
                                         <label>EUI</label>
@@ -48,7 +52,7 @@ class TrackerPopup extends React.Component<Props, State>{
                                     </div>
 
                                     <div className="form-label-group">
-                                        <label>Description</label>
+                                        <label>Add a description for your tracker</label>
                                         <input id="deviceDescription" type="text" className="form-control" placeholder="Description" required onChange={this.handleChange}></input>
                                     </div>
 
@@ -63,7 +67,7 @@ class TrackerPopup extends React.Component<Props, State>{
                                 <Button variant="secondary" onClick={this.props.hide}>
                                     Close
                                 </Button>
-                                <Button variant="primary" type="submit" onClick={this.handleSaveDevice} >
+                                <Button variant="primary" type="submit" form="newTrackerForm" >
                                     Save Changes
                                 </Button>
                             </Modal.Footer>
@@ -84,7 +88,7 @@ const mapStateToProps = (state: any) => {
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
         //we add this function to our props
-        getTrackerList: () => dispatch<any>(actionCreator.default.tracker.trackerList())
+        saveTracker: (p:any) => dispatch<any>(actionCreator.default.tracker.saveNewTracker(p))
     }
 }
 
