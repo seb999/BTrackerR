@@ -70,14 +70,13 @@ namespace Antea25.Controllers
          ///Save a new device
         [HttpGet]
         [Authorize]
-        [Route("/api/[controller]/DeleteDevice")]
+        [Route("/api/[controller]/DeleteDevice/{deviceId}")]
         public List<Device> DeleteDevice(int deviceId)
         {
             //Remove all entry from GpsPosition table
             DbContext.GpsPosition.RemoveRange(DbContext.GpsPosition.Where(predicate=>predicate.DeviceId == deviceId).Select(p=>p).ToList());
             //Remove device from Device table
             DbContext.Device.Remove(DbContext.Device.Where(predicate=>predicate.DeviceId == deviceId).FirstOrDefault());
-            
             DbContext.SaveChanges();
             return GetDeviceList();
         }

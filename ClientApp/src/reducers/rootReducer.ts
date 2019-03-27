@@ -5,7 +5,8 @@ const initState = {
   isLogged: false,
   isFirstRender: true,
   deviceList: new Array<Device>(),
-  isDeviceSaved : false,
+  isSaved : false,
+  isDeleted : false,
 }
 
 const rootReducer = (state = initState, action: any) => {
@@ -37,13 +38,27 @@ const rootReducer = (state = initState, action: any) => {
       return newState;
 
     case "TRACKER_SAVED":
-      newState.isDeviceSaved = true;
       newState.deviceList = action.payload
       return newState;
 
+    case "SAVING":
+      newState.isSaved = true;
+      return newState;
+
+    case "SAVED":
+      newState.isSaved = false;
+      return newState;
+
     case "TRACKER_DELETED":
-      //newState.isDeviceSaved = true;
       newState.deviceList = action.payload
+      return newState;
+
+    case "DELETING":
+      newState.isDeleted = true;
+      return newState;
+
+    case "DELETED":
+      newState.isDeleted = false;
       return newState;
     default:
       return state;

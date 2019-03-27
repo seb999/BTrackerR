@@ -9,16 +9,18 @@ import ConfirmPopup from "./Popup/ConfirmPopup"
 
 interface State {
     showAddTracker: boolean,
-    showConfirmPopup: boolean
-
+    showConfirmPopup: boolean,
+    deviceId : number
 }
 
 interface Props {
     history?: any;
     isLogged?: boolean;
     getTrackerList(): void;
+    deleteTracker(p :number) : void;
     deviceList: Array<Device>;
-    isDeviceSaved: boolean;
+    isSaved: boolean;
+    isDeleted: boolean;
 }
 
 class Tracker extends React.Component<Props, State>{
@@ -28,6 +30,7 @@ class Tracker extends React.Component<Props, State>{
         this.state = {
             showAddTracker: false,
             showConfirmPopup: false,
+            deviceId : 0
         };
     };
 
@@ -44,13 +47,14 @@ class Tracker extends React.Component<Props, State>{
         this.setState({ showAddTracker: true });
     }
 
-    handleDeleteTracker = (p:any) =>{
-        this.setState({ showConfirmPopup: true });
+    handleDeleteTracker = (deviceId:number) =>{
+        this.setState({ 
+            deviceId:deviceId,
+            showConfirmPopup: true });
     }
 
-    handleConfirmDelete = (p:any) =>{
-        if(p) alert("delete me");
-        
+    handleConfirmDelete = (deleteTracker:boolean) =>{
+        if(deleteTracker) this.props.deleteTracker(this.state.deviceId)
         this.setState({ showConfirmPopup: false });
     }
 
@@ -61,7 +65,7 @@ class Tracker extends React.Component<Props, State>{
                 <td>{item.deviceEUI}</td>
                 <td>{item.deviceDescription}</td>
                 <td>{item.userId}</td>
-                <td><button className="btn btn-outline-success my-2" onClick={() => this.handleDeleteTracker(item.deviceId)}>del</button></td>
+                <td><button className="btn my-2" onClick={() => this.handleDeleteTracker(item.deviceId)}><span style={{color:"red"}}><i className="fas fa-times-circle"></i></span></button></td>
             </tr>
         ));
 
@@ -72,8 +76,10 @@ class Tracker extends React.Component<Props, State>{
                     <div>
                         <br ></br>
                         <div >
-                            <button style={{ float: "left" }} type="button" className="btn btn-primary" onClick={this.handleShow}>Add new tracker</button>
-                            <div style={{ float: "right", height:"40px", padding:"7px" }} className={this.props.isDeviceSaved ? "alert alert-success" : "d-none"} role="alert"> Saved!</div>
+                            <button style={{ float: "left" }} type="button" className="btn btn-primary" onClick={this.handleShow}><span><i className="fas fa-edit"></i></span> Add new tracker</button>
+                          
+                            {this.props.isSaved && <div style={{ float: "right", height:"40px", padding:"7px" }} className="alert alert-success" role="alert"> Saved!</div>}
+                            {this.props.isDeleted && <div style={{ float: "right", height:"40px", padding:"7px" }} className="alert alert-success" role="alert"> Deleted!</div>}
                         </div>
                       
                         <br /><br />
@@ -107,14 +113,15 @@ const mapStateToProps = (state: any) => {
         //isLogged: state.isLogged,
         isLogged: true,
         deviceList: state.deviceList,
-        isDeviceSaved: state.isDeviceSaved,
+        isSaved: state.isSaved,
+        isDeleted: state.isDeleted,
     }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
-        //we add this function to our props
-        getTrackerList: () => dispatch<any>(actionCreator.default.tracker.trackerList())
+        getTrackerList: () => dispatch<any>(actionCreator.default.tracker.trackerList()),
+        deleteTracker: (deviceId : number) => dispatch<any>(actionCreator.default.tracker.deleteTracker(deviceId))
     }
 }
 
