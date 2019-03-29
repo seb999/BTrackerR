@@ -73,6 +73,11 @@ class Login extends React.Component<Props, State>{
                                     </div>
                                     <button className="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign in</button>
 
+                                    <hr className="my-4" ></hr>
+                                    <button className="btn btn-lg btn-google btn-block text-uppercase" style={{color : 'white', backgroundColor: '#ea4335'}} ><i className="fab fa-google mr-2"></i> Sign in with Google</button>
+                                    <button className="btn btn-lg btn-facebook btn-block text-uppercase" style={{color : 'white', backgroundColor: '#3b5998'}}><i className="fab fa-facebook-f mr-2"></i> Sign in with Facebook</button>
+
+
                                 </form>
                                 {(!this.props.isFirstRender && this.props.userId=="") && <Child />}
                             </div>
