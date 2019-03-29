@@ -12,7 +12,7 @@ const initState = {
 const rootReducer = (state = initState, action: any) => {
   const newState = { ...state };
   switch (action.type) {
-    case "LOG_USER_ASYN":
+    case "REGISTER_USER":
       if (action.payload.result) {
         newState.userId = action.payload.userId;
         newState.userEmail = action.payload.email;
@@ -26,7 +26,21 @@ const rootReducer = (state = initState, action: any) => {
       }
       return newState;
 
-    case "LOGOUT_USER_ASYN":
+    case "LOG_USER":
+      if (action.payload.result) {
+        newState.userId = action.payload.userId;
+        newState.userEmail = action.payload.email;
+        newState.isLogged = action.payload.result;
+        newState.isFirstRender = false;
+      }
+      else {
+        newState.userId = "";
+        newState.isLogged = false;
+        newState.isFirstRender = false;
+      }
+      return newState;
+
+    case "LOGOUT_USER":
       newState.userId = "";
       newState.userEmail = "";
       newState.isLogged = false;

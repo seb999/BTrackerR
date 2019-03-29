@@ -7,8 +7,10 @@ import { NavCommand } from './components/NavMenu';
 import Footer from './components/Footer';
 import Login from './components/Login'
 import Tracker from './components/Tracker'
+import Register from './components/Register'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
+
 
 interface State {
   redirectTo?: string;
@@ -31,6 +33,7 @@ class App extends React.Component<Props, State>{
         { type: "NavLink", path: "/Map", text: "Map", isActive: false },
         { type: "Button", path: "", text: "Login", isActive: !this.props.isLogged },
         { type: "Button", path: "", text: "Logout", isActive: this.props.isLogged },
+        { type: "Button", path: "", text: "Register", isActive: this.props.isLogged },
       ],
       redirectTo: undefined,
       user: {
@@ -51,8 +54,10 @@ class App extends React.Component<Props, State>{
             <Switch>
               <Route exact path='/' component={Home} />
               <Route exact path='/Home' component={Home} />
-              <Route exact path='/Login' component={Login} />
               <Route exact path='/Tracker' component={Tracker} />} />
+              <Route exact path='/Register' component={Register} />
+              <Route exact path='/Login' component={Login} />
+             
           </Switch>
           </div>
           <Footer />

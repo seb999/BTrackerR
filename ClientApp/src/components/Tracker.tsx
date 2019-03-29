@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as actionCreator from '../actions/actions';
-import TrackerPopup from "./TrackerPopup"
+import TrackerPopup from "./Popup/TrackerPopup"
 import ConfirmPopup from "./Popup/ConfirmPopup"
 
 
@@ -36,6 +36,8 @@ class Tracker extends React.Component<Props, State>{
 
     componentDidMount() {
         //Call from redux
+        console.log("component did mount");
+        console.log(this.props.isLogged);
         !this.props.isLogged ? this.props.history.push("/Login") : this.props.getTrackerList();
     }
 
@@ -110,8 +112,7 @@ class Tracker extends React.Component<Props, State>{
 //map the props of this class to the root redux state
 const mapStateToProps = (state: any) => {
     return {
-        //isLogged: state.isLogged,
-        isLogged: true,
+        isLogged: state.isLogged,
         deviceList: state.deviceList,
         isSaved: state.isSaved,
         isDeleted: state.isDeleted,

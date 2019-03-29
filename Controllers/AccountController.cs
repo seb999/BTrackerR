@@ -47,6 +47,24 @@ namespace BTrackerR.Controllers
 
         #region Login from Client (Seb)
 
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("/api/[controller]/RegisterFromClient")]
+        public async Task<LoginViewModel> RegisterFromClient([FromBody]RegisterViewModel model)
+        {
+            var user = new ApplicationUser { UserName = model.Email, Email = model.Email, EmailConfirmed = true };
+            var result = await _userManager.CreateAsync(user, model.Password);
+
+            if (result.Succeeded)
+            {
+                return await LoginFromClient(new LoginViewModel() { Email = model.Email, Password = model.Password, RememberMe = false });
+            }
+            else
+            {
+                return await LoginFromClient(new LoginViewModel() { Email = "", Password = "", RememberMe = false });
+            }
+        }
+
         [HttpGet]
         [Route("/api/[controller]/Logout")]
         public async Task<string> Logout()
@@ -61,9 +79,8 @@ namespace BTrackerR.Controllers
         [Route("/api/[controller]/LoginFromClient")]
         public async Task<LoginViewModel> LoginFromClient([FromBody]LoginViewModel model, string returnUrl = null)
         {
-            Console.WriteLine("Reach API for");
             ViewData["ReturnUrl"] = returnUrl;
-       
+
             var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
 
             if (result.Succeeded)
@@ -83,19 +100,23 @@ namespace BTrackerR.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route("/api/[controller]/GetUserId/{userEmail}")]
-        public async Task<LoginViewModel> GetUserId(string userEmail){
-            var result =  await DbContext.Users.Where(p=>p.Email == userEmail).Select(p=>p).FirstOrDefaultAsync();
-              return new LoginViewModel(){ 
-                  Email = result.Email, 
-                  UserId = result.Id};
+        public async Task<LoginViewModel> GetUserId(string userEmail)
+        {
+            var result = await DbContext.Users.Where(p => p.Email == userEmail).Select(p => p).FirstOrDefaultAsync();
+            return new LoginViewModel()
+            {
+                Email = result.Email,
+                UserId = result.Id
+            };
         }
 
         [AllowAnonymous]
-        private async Task<LoginViewModel> GetUserId2(LoginViewModel loginViewModel){
-            var result =  await DbContext.Users.Where(p=>p.Email == loginViewModel.Email).Select(p=>p).FirstOrDefaultAsync();
-                loginViewModel.Email = result.Email;
-                loginViewModel.UserId = result.Id;
-              return loginViewModel;
+        private async Task<LoginViewModel> GetUserId2(LoginViewModel loginViewModel)
+        {
+            var result = await DbContext.Users.Where(p => p.Email == loginViewModel.Email).Select(p => p).FirstOrDefaultAsync();
+            loginViewModel.Email = result.Email;
+            loginViewModel.UserId = result.Id;
+            return loginViewModel;
         }
 
         #endregion
@@ -288,7 +309,7 @@ namespace BTrackerR.Controllers
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-                   // await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
+                    // await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation("User created a new account with password.");

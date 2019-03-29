@@ -33,6 +33,10 @@ class NavMenu extends React.Component<Props, State> {
     this.props.history.push("/Login");
   }
 
+  register = () => {
+    this.props.history.push("/Register");
+  }
+
   logout = () => {
     this.props.logoutUser();
     this.props.history.push("/Home");
@@ -75,11 +79,15 @@ class NavMenu extends React.Component<Props, State> {
             return (<div key={i}></div>)
           })} */}
 
-          <button className={this.props.isLogged ? "btn btn-outline-success my-2 my-sm-0" : "btn btn-outline-success my-2 my-sm-0 d-none"}
+          <button className={!this.props.isLogged ? "btn btn-outline-success my-2 my-sm-0 mr-1" : "btn btn-outline-success my-2 my-sm-0 d-none"}
+            onClick={this.register}>Register
+          </button>
+
+          <button className={this.props.isLogged ? "btn btn-secondary my-2 my-sm-0" : "btn btn-outline-success my-2 my-sm-0 d-none"}
             onClick={this.logout}>Logout
           </button>
 
-          <button className={!this.props.isLogged ? "btn btn-outline-success my-2 my-sm-0" : "btn btn-outline-success my-2 my-sm-0 d-none"}
+          <button className={!this.props.isLogged ? "btn btn-success my-2 my-sm-0" : "btn btn-outline-success my-2 my-sm-0 d-none"}
             onClick={this.login}>Login
           </button>
         </div>
@@ -100,7 +108,7 @@ const mapStateToProps = (state: any) => {
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     //we add this function to our props
-    logoutUser: () => dispatch<any>(actionCreator.default.account.logoutUserAsyn())
+    logoutUser: () => dispatch<any>(actionCreator.default.account.logoutUser())
   }
 }
 

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Modal, Button } from "react-bootstrap";
 import { connect } from 'react-redux';
-import * as actionCreator from '../actions/actions';
+import * as actionCreator from '../../actions/actions';
 import { Dispatch } from 'redux';
 
 interface State { 
