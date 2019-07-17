@@ -48,9 +48,9 @@ class App extends React.Component<Props, State>{
     return (
 
       <BrowserRouter>
-        <div>
+        <div id="page-container">
           <NavMenu commands={this.state.navCommands} />
-          <div className="container">
+          <div className="container" id="content-wrap">
             <Switch>
               <Route exact path='/' component={Home} />
               <Route exact path='/Home' component={Home} />
